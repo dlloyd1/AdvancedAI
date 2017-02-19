@@ -1,0 +1,27 @@
+﻿  ChessAiPlayer.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\chess\ChessPlayer.h(11): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ChessMoveManager.cpp
+  GameScreen_Chess.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\chess\../GameScreen.h(8): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ChessPlayer.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\chess\ChessPlayer.h(11): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  OpeningsPlaybook.cpp
+  Collisions.cpp
+  GameScreen_Conway.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\conway\../GameScreen.h(8): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  GameScreen.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\GameScreen.h(8): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  GameScreenManager.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\GameScreenManager.h(8): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  GameScreen_Lunar.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\lunar\../GameScreen.h(8): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  LunarLander.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\lunar\../Texture2D.h(8): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  Source.cpp
+Source.cpp(5): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  Texture2D.cpp
+c:\student temporary folder\advancedai chess v2.8 speedimprovements\advancedai student copy\gameai\Texture2D.h(8): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  tinystr.cpp
+  tinyxml.cpp
+  tinyxmlerror.cpp
+  tinyxmlparser.cpp

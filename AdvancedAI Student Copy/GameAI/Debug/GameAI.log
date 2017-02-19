@@ -1,0 +1,21 @@
+﻿  GameScreen_RainbowIslands.cpp
+c:\student temporary folder\advancedai rainbow v0.0 broken\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(32): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  CharacterBub.cpp
+  NeuralNet.cpp
+  Generating Code...
+  Compiling...
+  Source.cpp
+  LevelMap.cpp
+  CharacterRainbow.cpp
+  CharacterFruit.cpp
+  CharacterChest.cpp
+  CharacterCaterpillar.cpp
+  Character.cpp
+  GenAlg.cpp
+c:\student temporary folder\advancedai rainbow v0.0 broken\advancedai student copy\gameai\genalg.cpp(55): warning C4018: '<': signed/unsigned mismatch
+c:\student temporary folder\advancedai rainbow v0.0 broken\advancedai student copy\gameai\genalg.cpp(100): warning C4018: '<': signed/unsigned mismatch
+c:\student temporary folder\advancedai rainbow v0.0 broken\advancedai student copy\gameai\genalg.cpp(110): warning C4018: '<': signed/unsigned mismatch
+  GameScreenManager.cpp
+  Generating Code...
+  GameAI.vcxproj -> C:\Student Temporary Folder\AdvancedAI Rainbow v0.0 Broken\AdvancedAI Student Copy\Debug\GameAI.exe
+  GameAI.vcxproj -> C:\Student Temporary Folder\AdvancedAI Rainbow v0.0 Broken\AdvancedAI Student Copy\Debug\GameAI.pdb (Full PDB)
