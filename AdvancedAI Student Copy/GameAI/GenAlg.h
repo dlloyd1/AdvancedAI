@@ -15,6 +15,7 @@ public:
 	vector<Genome> Epoch(vector<Genome> &old_pop);
 
 	vector<Genome> GetChromos() const { return mPop; }
+	void SetChromos(vector<Genome> startPop) { mPop = startPop; }
 	double AverageFitness() const { return mTotalFitness / mPopSize; }
 	double BestFitness() const { return mBestFitness; }
 

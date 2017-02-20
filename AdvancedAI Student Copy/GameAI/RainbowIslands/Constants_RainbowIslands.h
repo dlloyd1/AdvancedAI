@@ -38,7 +38,7 @@ const float JUMP_FORCE_DECREMENT		= 0.008f;
 const float JUMP_FORCE_INITIAL_FRUIT	= 0.29f;
 
 //Level Time.
-const int LEVEL_TIME					= 60000;//60 seconds
+const int LEVEL_TIME = 10000;/*60000;*///60 seconds
 const int TRIGGER_ANGRY_TIME			= 10000;//10 seconds
 
 

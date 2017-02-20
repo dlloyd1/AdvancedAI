@@ -125,7 +125,7 @@ void CharacterBub::Update(float deltaTime, SDL_Event e)
 				SetState(CHARACTERSTATE_WALK);
 		}
 		//else if (VirtualJoypad::Instance()->RightArrow)
-		else if(mOutputs[1] > 0.5)
+		if(mOutputs[1] > 0.5)
 		{
 			mMovingRight = true;
 			mMovingLeft = false;
@@ -133,7 +133,7 @@ void CharacterBub::Update(float deltaTime, SDL_Event e)
 				SetState(CHARACTERSTATE_WALK);
 		}
 		//else
-		else if(mOutputs[2] > 0.5)
+		if(mOutputs[2] > 0.5)
 		{
 			mMovingLeft = false;
 			mMovingRight = false;
@@ -142,7 +142,7 @@ void CharacterBub::Update(float deltaTime, SDL_Event e)
 		}
 
 		//if (VirtualJoypad::Instance()->UpArrow)
-		else if(mOutputs[3] > 0.5)
+		if(mOutputs[3] > 0.5)
 		{
 			if (!mJumping)
 			{
@@ -160,17 +160,17 @@ void CharacterBub::AlternateCharacterUpdate(float deltaTime, SDL_Event e)
 	mInputs.clear();
 	mOutputs.clear();
 
-	cout << "Bub is using " << GetNumberOfWeights() << "weights." << endl;
+	//cout << "Bub is using " << GetNumberOfWeights() << "weights." << endl;
 	vector<double> tempWeights = mItsBrain.GetWeights();
 
-	if (tempWeights.size() > 0)
+	/*if (tempWeights.size() > 0)
 	{
 		for each (double weight in tempWeights)
 		{
 			cout << weight << " | ";
 		}
 		cout << endl;
-	}
+	}*/
 	mTimeAlive += deltaTime;
 	//NN inputs
 	mInputs.push_back(GetCentralPosition().x);

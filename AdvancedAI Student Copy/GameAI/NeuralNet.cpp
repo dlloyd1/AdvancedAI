@@ -8,6 +8,7 @@ NeuralNet::NeuralNet()
 	mNeuronsPerHiddenLayer = kNumNNNeuronsPerHiddenLayer;
 
 	CreateNet();
+	GenerateRandomWeights();
 }
 
 void NeuralNet::CreateNet()
@@ -38,7 +39,7 @@ vector<double> NeuralNet::GetWeights() const
 	vector<double> allWeights;
 
 	//for each neuron in each layer, store it's weights
-	for (int i = 0; i < mNumHiddenLayers + 1; ++i)
+	for (int i = 0; i < mNumHiddenLayers; ++i)
 	{
 		for (int j = 0; j < mLayers[i].mNumNeurons; ++j)
 		{
@@ -71,7 +72,7 @@ void NeuralNet::PutWeights(vector<double>& weights)
 {
 	int weight = 0;
 
-	for (int i = 0; i < mNumHiddenLayers + 1; ++i)
+	for (int i = 0; i < mNumHiddenLayers; ++i)
 	{
 		for (int j = 0; j < mLayers[i].mNumNeurons; ++j)
 		{
@@ -131,4 +132,15 @@ vector<double> NeuralNet::Update(vector<double>& inputs)
 		}
 	}
 	return outputs;
+}
+
+void NeuralNet::GenerateRandomWeights()
+{
+	int numWeights = GetNumberOfWeights();
+	vector<double> newRandomWeights;
+	for (int i = 0; i < numWeights; ++i)
+	{
+		newRandomWeights.push_back((double)RandomNumber(-1.0f, 1.0f));
+	}
+	PutWeights(newRandomWeights);
 }

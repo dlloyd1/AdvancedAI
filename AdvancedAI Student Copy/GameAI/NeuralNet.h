@@ -4,6 +4,7 @@
 #include "RainbowIslands\Commons_RainbowIslands.h"
 #include "RainbowIslands\Constants_RainbowIslands.h"
 #include <vector>
+#include "Commons.h"
 
 using namespace std;
 
@@ -26,6 +27,9 @@ public:
 
 	//calculate the outputs from a set of inputs
 	vector<double> Update(vector<double> &inputs);
+
+	void GenerateRandomWeights();
+
 private:
 	int mNumInputs;
 	int mNumOutputs;
