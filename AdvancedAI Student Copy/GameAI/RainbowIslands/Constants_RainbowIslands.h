@@ -38,7 +38,7 @@ const float JUMP_FORCE_DECREMENT		= 0.008f;
 const float JUMP_FORCE_INITIAL_FRUIT	= 0.29f;
 
 //Level Time.
-const int LEVEL_TIME = 10000;/*60000;*///60 seconds
+const int LEVEL_TIME = /*10000;*/60000;//60 seconds
 const int TRIGGER_ANGRY_TIME			= 10000;//10 seconds
 
 
@@ -47,19 +47,30 @@ const int kTileSpriteSheetWidth			= 5;
 const int kTileSpriteSheetHeight		= 5;
 
 //0.05 - 0.3
-const double kRainbowMutationRate = 0.05;
+const double kRainbowMutationRate = 0.3;
 
-const double kRainbowCrossoverRate = 0.7;
+const double kRainbowCrossoverRate = 0.6;
 
-const int kNumNNInputs = 3;
+const int kNumNNInputs = 13;
 const int kNumNNOutputs = 4;
 const int kNumNNHiddenLayers = 1;
 const int kNumNNNeuronsPerHiddenLayer = 6;
-const double kMaxPerturbation = 0.3;
-const int kActivationResponse = 1;
+const double kMaxPerturbation = 0.4;
+const double kActivationResponse = 4.0;
 const int kBias = -1;
+const double kLearningRate = 2.5;
 
 const int kRunsPerGeneration = 10;
+
+//fitness weights
+const double kPosWeight = 0.9;
+const double kAliveWeight = 0.15;
+const double kScoreWeight = 0.65;
+
+//feeler constants
+const double kRainbowYOffset = 12.0;
+const double kRainbowRad = 28.0;
+const double kMaxBubScore = 410.0;
 
 
 #endif //RAINBOW_CONSTANTS_H

@@ -1,11 +1,11 @@
 #include "GenAlg.h"
 
-GenAlg::GenAlg(int popSize, double mutRate, double crossRate, int numWeights)
+/*Credit Matt Buckland, AI Techniques for Game Programming*/
+
+GenAlg::GenAlg(int popSize, int numWeights)
 {
 	mPopSize = popSize;
 	mChromoLength = numWeights;
-	mMutationRate = mutRate;
-	mCrossoverRate = crossRate;
 
 	mTotalFitness = 0;
 	mGeneration = 0;
@@ -14,19 +14,22 @@ GenAlg::GenAlg(int popSize, double mutRate, double crossRate, int numWeights)
 	mWorstFitness = 99999999;
 	mAverageFitness = 0;
 
+	InitPopWithRandomChromos();
+}
 
+void GenAlg::InitPopWithRandomChromos()
+{
 	//init pop with chromosomes of random weights and all fitness initiatilised to 0
-	//for (int i = 0; i < mPopSize; ++i)
-	//{
-	//	mPop.push_back(Genome());
-	//	for (int j = 0; j < mChromoLength; ++j)
-	//	{
-	//		//float random = (-1.0f + 1) * ((((float)rand()) / (float)RAND_MAX)) + -1.0f;
-	//		float random = RandomNumber(-1.0f, 1.0f);
-	//		mPop[i].mWeights.push_back(random);
-	//	}
-	//}
-
+	for (int i = 0; i < mPopSize; ++i)
+	{
+		mPop.push_back(Genome());
+		for (int j = 0; j < mChromoLength; ++j)
+		{
+			//float random = (-1.0f + 1) * ((((float)rand()) / (float)RAND_MAX)) + -1.0f;
+			float random = RandomNumber(0.0f, 1.0f);
+			mPop[i].mWeights.push_back(random);
+		}
+	}
 }
 
 //run a population of chromosomes through one cycle
@@ -34,24 +37,16 @@ GenAlg::GenAlg(int popSize, double mutRate, double crossRate, int numWeights)
 vector<Genome> GenAlg::Epoch(vector<Genome>& old_pop)
 {
 	mPop = old_pop;
-
 	Reset();
 
-	//sort ready for scaling and elitism
 	sort(mPop.begin(), mPop.end());
-
-	//calculate best/worst/avg/total fitness
 	CalculateBestWorstAvTot();
 
-	//temp storage
 	vector<Genome> newPop;
-
-	//elitism
 	if (!(kNumCopiesElite * kNumElite % 2))
 	{
 		GrabNBest(kNumElite, kNumCopiesElite, newPop);
 	}
-
 
 	//GA Loop
 	while (newPop.size() < mPopSize)
@@ -78,20 +73,16 @@ vector<Genome> GenAlg::Epoch(vector<Genome>& old_pop)
 
 void GenAlg::Crossover(const vector<double>& mum, const vector<double>& dad, vector<double>& baby1, vector<double>& baby2)
 {
-	//float random = (-1.0f + 1) * ((((float)rand()) / (float)RAND_MAX)) + -1.0f;
-	float random = RandomNumber(-1.0f, 1.0f);
+	float random = RandomNumber(0.0f, 1.0f);
 
-	//return parents as children if mutRate check fails or parents are same
-	if (random > mCrossoverRate || (mum == dad))
+	if (random > kRainbowCrossoverRate || (mum == dad))
 	{
 		baby1 = mum;
 		baby2 = dad;
 		return;
 	}
 
-	//int randomInt = (0 + mChromoLength - 1) * (rand() / RAND_MAX) + 0.0f;
 	int randomInt = RandomInt(0, mChromoLength - 1);
-	/*int crossoverPoint = RandomInt(0, mChromoLength - 1);*/
 	int crossoverPoint = randomInt;
 
 	for (int i = 0; i < crossoverPoint; ++i)
@@ -108,17 +99,12 @@ void GenAlg::Crossover(const vector<double>& mum, const vector<double>& dad, vec
 
 void GenAlg::Mutate(vector<double>& chromo)
 {
-	//traverse and mutate based on mutation rate
 	for (int i = 0; i < chromo.size(); ++i)
 	{
-
-		float random = RandomNumber(-1.0f, 1.0f);
-
-		if (random < mMutationRate)
+		float random = RandomNumber(0.0f, 1.0f);
+		if (random < kRainbowMutationRate)
 		{
-			//float random = (-1.0f + 1) * ((((float)rand()) / (float)RAND_MAX)) + -1.0f;
-			float random = RandomNumber(-1.0f, 1.0f);
-			//add +ve or -ve small val to weight to adjust
+			float random = RandomNumber(0.0f, 1.0f);
 			chromo[i] += random * kMaxPerturbation;
 		}
 	}
@@ -126,15 +112,10 @@ void GenAlg::Mutate(vector<double>& chromo)
 
 Genome GenAlg::GetChromoRoulette()
 {
-	//float random = (0.0f + (float)mTotalFitness) * ((((float)rand()) / (float)RAND_MAX)) + 0.0f;
-
-	float random = RandomNumber(0.0f, (float)mTotalFitness);
-
-	//double slice = (double)(RandomFloat(0.0f, (float)mTotalFitness));
-	double slice = (double)random;
+	float random = RandomNumber(0.0f, 1.0f);
+	double slice = (double)random * mTotalFitness;
 
 	Genome chosenGenome;
-
 	double fitnessSoFar = 0;
 
 	for (int i = 0; i < mPopSize; ++i)
@@ -151,7 +132,6 @@ Genome GenAlg::GetChromoRoulette()
 
 void GenAlg::GrabNBest(int nBest, const int numCopies, vector<Genome>& population)
 {
-	//put numCopies of the n most fittest into the vector supplied
 	while (nBest--)
 	{
 		for (int i = 0; i < numCopies; ++i)

@@ -58,6 +58,13 @@ private:
 	void DrawDebugCircle(Vector2D centrePoint, double radius, int red, int green, int blue);
 	void DrawDebugLine(Vector2D startPoint, Vector2D endPoint, int red, int green, int blue);
 
+	void UpdateNeuralNetwork();
+	void ReadWeightsFile();
+	void SaveWeightsFile();
+
+	template<class T>
+	Vector2D FindClosest(vector<T*> theList);
+
 //--------------------------------------------------------------------------------------------------
 private:
 	Texture2D*				  mBackgroundTexture;
@@ -77,7 +84,7 @@ private:
 
 
 	GenAlg*					  mGA;
-	NeuralNet				  mNeuralNet;
+	NeuralNet*				  mNeuralNet;
 	vector<Genome>			  mThePopulation;
 	int						  mRunThrough;
 	int						  mGeneration;
@@ -86,6 +93,13 @@ private:
 	//vector<vector<double>>    mRandomWeightsVector;
 
 	vector<Genome>			  mGenomeVector;
+	vector<double> mInputs;
+	vector<double> mOutputs;
+	bool loadedWeightsAlready;
+
+
+
+	vector<Vector2D> mDebugCirclePositions;
 };
 
 

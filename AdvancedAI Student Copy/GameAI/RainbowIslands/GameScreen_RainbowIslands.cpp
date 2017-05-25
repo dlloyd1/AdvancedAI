@@ -17,6 +17,8 @@
 #include "../Collisions.h"
 #include "VirtualJoypad.h"
 #include <time.h>
+#include <fstream>
+
 using namespace::std;
 
 int RainbowOffsets[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,22,22,23,23,
@@ -25,11 +27,13 @@ int RainbowOffsets[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
 
 GameScreen_RainbowIslands::GameScreen_RainbowIslands(SDL_Renderer* renderer) : GameScreen(renderer)
 {
+	loadedWeightsAlready = false;
 	mRunThrough = 0;
 	mGeneration = 0;
 
 	srand(time(NULL));
 	mLevelMap = NULL;
+	mGenomeVector.clear();
 	SetUpLevel();
 }
 
@@ -101,6 +105,11 @@ void GameScreen_RainbowIslands::Render()
 	//Draw the player.
 	mBubCharacter->Render();
 	DrawDebugCircle(mBubCharacter->GetCentralPosition(), mBubCharacter->GetCollisionRadius(), 0, 255, 0);
+
+	for (auto p : mDebugCirclePositions)
+	{
+		DrawDebugCircle(p, 10.0f, 0, 0, 255);
+	}
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -128,23 +137,127 @@ void GameScreen_RainbowIslands::RenderBackground()
 			}
 		}
 	}
-
-
 }
 
+void GameScreen_RainbowIslands::UpdateNeuralNetwork()
+{
+	mInputs.clear();
+	mOutputs.clear();
+	mDebugCirclePositions.clear();
+
+	//grid of feeler balls - 3x3 including bub's position
+	int yTop = (int)mBubCharacter->GetCentralPosition().y - mBubCharacter->GetSingleSpriteHeight();
+	int yBottom = (int)mBubCharacter->GetCentralPosition().y + mBubCharacter->GetSingleSpriteHeight();
+	int xLeft = (int)mBubCharacter->GetCentralPosition().x - mBubCharacter->GetSingleSpriteWidth();
+	int xRight = (int)mBubCharacter->GetCentralPosition().x + mBubCharacter->GetSingleSpriteWidth();
+	int count = 0;
+	for (int y = yTop; y < yBottom + mBubCharacter->GetSingleSpriteHeight(); y += mBubCharacter->GetSingleSpriteHeight())
+	{
+		for (int x = xLeft; x < xRight + mBubCharacter->GetSingleSpriteWidth(); x += mBubCharacter->GetSingleSpriteWidth())
+		{
+			count++;
+			mDebugCirclePositions.push_back(Vector2D(x, y));	
+			//no rainbow, so is this feeler of either side of the level?
+			if (x <= 0 || x >= kRainbowIslandsScreenWidth)
+			{
+				mInputs.push_back(1.0);
+			}
+			else
+			{
+				//feeler is on screen and not on a rainbow, so use collision map as input
+				mInputs.push_back((double)(mLevelMap->GetCollisionTileAt((y / TILE_HEIGHT), (x / TILE_WIDTH))));
+			}
+		}
+	}
+
+	//closest fruit
+	Vector2D closestLoc = FindClosest(mFruit);
+	mInputs.push_back((double)(1 - ((mBubCharacter->GetCentralPosition() - closestLoc).Length()) / kRainbowIslandsScreenHeight));
+
+	//closest enemy
+	Vector2D closestELoc = FindClosest(mEnemies);
+	mInputs.push_back((((double)(mBubCharacter->GetCentralPosition() - closestELoc).Length()) / kRainbowIslandsScreenHeight));
+
+	//height up screen
+	mInputs.push_back((double)(1 - (mBubCharacter->GetCentralPosition().y / kRainbowIslandsScreenHeight)));
+
+	if (mBubCharacter->OnARainbow())
+	{
+		mInputs.push_back(1.0);
+	}
+	else
+	{
+		mInputs.push_back(0.0);
+	}
+	mOutputs = mNeuralNet->Update(mInputs);
+}
+
+template<class T>
+Vector2D GameScreen_RainbowIslands::FindClosest(vector<T*> theList)
+{
+	double smallestDist = MaxDouble;
+	Vector2D closestLoc;
+	for (auto item : theList)
+	{
+		double temp = Vec2DDistance(mBubCharacter->GetCentralPosition(), item->GetCentralPosition());
+		if (temp < smallestDist)
+		{
+			smallestDist = temp;
+			closestLoc = item->GetCentralPosition();
+		}
+	}
+	return closestLoc;
+}
+
+void GameScreen_RainbowIslands::SaveWeightsFile()
+{
+	fstream fs;
+	fs.open("weightsProgress.txt", fstream::out);
+
+	for (size_t i = 0; i < mGenomeVector.size(); ++i)
+	{
+		for each (double dub in mGenomeVector[i].mWeights)
+		{
+			fs << dub << endl;
+		}
+	}
+}
+
+void GameScreen_RainbowIslands::ReadWeightsFile()
+{
+	fstream fs;
+	fs.open("weightsProgress.txt", fstream::in);
+
+	for (size_t i = 0; i < kRunsPerGeneration; ++i)
+	{
+		for (size_t j = 0; j < mNeuralNet->GetNumberOfWeights(); ++j)
+		{
+			string input;
+			fs >> input;
+			double weightAsDub = atof(input.c_str());
+			mGenomeVector[i].mWeights.push_back(weightAsDub);
+		}
+	}
+}
 //--------------------------------------------------------------------------------------------------
 
 void GameScreen_RainbowIslands::Update(float deltaTime, SDL_Event e)
 {
-	//then update each player |  if they reach top of level set max fitness
-
-	//else run the GA and update the player with new NN
-
-
 	//--------------------------------------------------------------------------------------------------
 	//Update the Virtual Joypad.
 	//--------------------------------------------------------------------------------------------------
+	VirtualJoypad::Instance()->LeftArrow = false;
+	VirtualJoypad::Instance()->RightArrow = false;
+	VirtualJoypad::Instance()->UpArrow = false;
+	VirtualJoypad::Instance()->DownArrow = false;
+	VirtualJoypad::Instance()->ForceRestart = false;
+
 	VirtualJoypad::Instance()->SetJoypadState(e);
+
+	if (VirtualJoypad::Instance()->ForceRestart)
+	{
+		RestartLevel();
+	}
 
 	//--------------------------------------------------------------------------------------------------
 	//Update the level time.
@@ -160,11 +273,34 @@ void GameScreen_RainbowIslands::Update(float deltaTime, SDL_Event e)
 	}
 
 	//--------------------------------------------------------------------------------------------------
+	//Update the neural net. populate inputs and outputs
+	//--------------------------------------------------------------------------------------------------
+
+	UpdateNeuralNetwork();
+
+
+	if (mOutputs[0] > 0.5)
+	{
+		VirtualJoypad::Instance()->LeftArrow = true;
+	}
+	if (mOutputs[1] > 0.5)
+	{
+		VirtualJoypad::Instance()->UpArrow = true;
+	}
+	if (mOutputs[2] > 0.5)
+	{
+		VirtualJoypad::Instance()->RightArrow = true;
+	}
+	if (mOutputs[3] > 0.5)
+	{
+		VirtualJoypad::Instance()->DownArrow = true;
+	}
+	
+	//--------------------------------------------------------------------------------------------------
 	//Update the player.
 	//--------------------------------------------------------------------------------------------------
 	mBubCharacter->Update(deltaTime, e);
-
-
+	
 	if (!mBubCharacter->GetAlive())
 	{
 		RestartLevel();
@@ -408,17 +544,17 @@ bool GameScreen_RainbowIslands::SetUpLevel()
 	//Create the level map.
 	SetLevelMap();
 
-	mNeuralNet = NeuralNet();
-
+	mNeuralNet = new NeuralNet();
 	CreateStartingCharacters();
 
 	//now we have a character, note the weights in his NN
-	mNumWeightsInNN = mBubCharacter->GetNumberOfWeights();
+	mNumWeightsInNN = mNeuralNet->GetNumberOfWeights();
 
 	//instantiate GA class
-	mGA = new GenAlg(10, kRainbowMutationRate, kRainbowCrossoverRate, mNumWeightsInNN);
-	/*mThePopulation = mGA->GetChromos();
-	mBubCharacter->PutWeights(mThePopulation[0].mWeights);*/
+	mGA = new GenAlg(kRunsPerGeneration, mNumWeightsInNN);
+	mGenomeVector = mGA->GetChromos();
+
+	ReadWeightsFile();
 
 	mTimeToCompleteLevel = LEVEL_TIME;
 	mTriggeredAnger = false;
@@ -432,29 +568,20 @@ bool GameScreen_RainbowIslands::SetUpLevel()
 
 void GameScreen_RainbowIslands::RestartLevel()
 {
-	//lower Y is higher fitness
-	//calc fitness here, store in Genome in mGenomeVector
-	
-	double fitness = (kRainbowIslandsScreenHeight - mBubCharacter->GetCentralPosition().y) + mBubCharacter->GetTimeAlive() + mBubCharacter->GetPoints();
-
-	//store up to 10 lots of weights to use in the GA
-	//store the weights used previously here
-	mGenomeVector.push_back(Genome(mBubCharacter->GetBrain().GetWeights(), fitness));
+	mNeuralNet->NetworkTrainingEpoch(mBubCharacter->GetPoints(), mInputs, mOutputs, kMaxBubScore);
 
 	cout << "Run through: " << mRunThrough << endl;
 	cout << "GENERATION: " << mGeneration << endl;
+	
+	//every 10th restart, epoch the GA, reset genome vector with functional operators applied to it from ga
+	
+	//every restart, calc fitness, store against weights as genome
+	double fitness = ((kRainbowIslandsScreenHeight - mBubCharacter->GetCentralPosition().y) * kPosWeight) + (mBubCharacter->GetTimeAlive() * kAliveWeight) + (mBubCharacter->GetPoints() * kScoreWeight);
+	cout << "Fitness: " << fitness << endl;
 
-	if ((mGeneration == 0) && (mGenomeVector.size() == 10)) //random weights sets first generation
-	{
-		//one runthrough already completed at this point
-
-		//new random weights
-		mBubCharacter->GetBrain().GenerateRandomWeights();
-	}
-	else //after first generation, iterate through the genome vector returned from the GA
-	{
-		mBubCharacter->PutWeights(mGenomeVector.at(mRunThrough).mWeights);
-	}
+	mGenomeVector[mRunThrough].mFitness = fitness;
+	mNeuralNet->PutWeights(mGenomeVector[mRunThrough++].mWeights);
+	
 
 	//increment counter
 	mRunThrough++;
@@ -462,37 +589,19 @@ void GameScreen_RainbowIslands::RestartLevel()
 	//10 runs per generation, then run the GA
 	if (mRunThrough >= (kRunsPerGeneration)) //0-9
 	{
-		if (mGeneration == 0)
-		{
-			mGA->SetChromos(mGenomeVector);
-		}
+		SaveWeightsFile();
 
 		//set of 10 finished
 		mRunThrough = 0;
 		mGeneration++;
-		
-		vector<Genome> oldGenome = mGenomeVector;
-		//so update the genome vector
-		mGenomeVector = mGA->Epoch(mGenomeVector);
-
-		int flag = 1;
-
-		for (int i = 0; i < oldGenome.size(); ++i)
 		{
-			if (oldGenome.at(i).mWeights[0] != mGenomeVector.at(i).mWeights[0])
-			{
-				flag = 0;
-				break;
-			}
+			vector<Genome> oldGenome = mGenomeVector;
+			//so update the genome vector
+			mGenomeVector = mGA->Epoch(oldGenome);
 		}
-		if (flag == 1)
-		{
-			cout << "Vectors still equal" << endl;
-		}
-	
 	}
 
-	delete mBubCharacter;
+	delete mBubCharacter; 
 	mBubCharacter = NULL;
 
 	//Level map.
@@ -500,9 +609,18 @@ void GameScreen_RainbowIslands::RestartLevel()
 	mLevelMap = NULL;
 
 	//Enemies.
+	for each (Character* var in mEnemies)
+	{
+		var->~Character();
+		delete var;
+	}
 	mEnemies.clear();
 
 	//Fruit.
+	for each(Character* var in mFruit)
+	{
+		delete var;
+	}
 	mFruit.clear();
 
 	//Rainbows.
@@ -520,8 +638,6 @@ void GameScreen_RainbowIslands::RestartLevel()
 
 	//Respawn characters and map.
 	CreateStartingCharacters();
-	//new population from GA
-	//mThePopulation = mGA->Epoch(mThePopulation);
 
 	mTimeToCompleteLevel = LEVEL_TIME;
 	mTriggeredAnger = false;
@@ -532,7 +648,7 @@ void GameScreen_RainbowIslands::RestartLevel()
 void GameScreen_RainbowIslands::CreateStartingCharacters()
 {
 	//Set up the player character.
-	mBubCharacter = new CharacterBub(mRenderer, "Images/RainbowIslands/bub.png", mLevelMap, Vector2D(100, 570), mNeuralNet);
+	mBubCharacter = new CharacterBub(mRenderer, "Images/RainbowIslands/bub.png", mLevelMap, Vector2D(100, 570));
 	mCanSpawnRainbow = true;
 
 	//Set up the bad guys.

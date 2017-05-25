@@ -13,14 +13,11 @@
 
 const int kSpritesOnSheet = 7;
 
-CharacterBub::CharacterBub(SDL_Renderer* renderer, string imagePath, LevelMap* map, Vector2D startPosition, NeuralNet neuralNetwork)
+CharacterBub::CharacterBub(SDL_Renderer* renderer, string imagePath, LevelMap* map, Vector2D startPosition)
 	: Character(renderer, imagePath, map, startPosition)
 {
-	mItsBrain = neuralNetwork;
 
 	mFitness = 0;
-	mInputs.clear();
-	mOutputs.clear();
 
 	mFacingDirection	= FACING_RIGHT;
 	mPosition			= startPosition;
@@ -107,25 +104,14 @@ void CharacterBub::Update(float deltaTime, SDL_Event e)
 		int centralYPosition  = (int)(mPosition.y+mTexture->GetHeight()*0.5f)/TILE_HEIGHT;
 		int footPosition  = (int)(mPosition.y+mTexture->GetHeight())/TILE_HEIGHT;
 
-	
-		/*double highestOutput = 0;
-		for each (double d in mOutputs)
-		{
-			if (d > highestOutput)
-			{
-				highestOutput = d;
-			}
-		}*/
-		//if (VirtualJoypad::Instance()->LeftArrow)
-		if(mOutputs[0] > 0.5)
+		if (VirtualJoypad::Instance()->LeftArrow)
 		{
 			mMovingLeft = true;
 			mMovingRight = false;
 			if (mOnGround)
 				SetState(CHARACTERSTATE_WALK);
 		}
-		//else if (VirtualJoypad::Instance()->RightArrow)
-		if(mOutputs[1] > 0.5)
+		else if (VirtualJoypad::Instance()->RightArrow)
 		{
 			mMovingRight = true;
 			mMovingLeft = false;
@@ -133,7 +119,7 @@ void CharacterBub::Update(float deltaTime, SDL_Event e)
 				SetState(CHARACTERSTATE_WALK);
 		}
 		//else
-		if(mOutputs[2] > 0.5)
+		else if(VirtualJoypad::Instance()->DownArrow)
 		{
 			mMovingLeft = false;
 			mMovingRight = false;
@@ -141,8 +127,7 @@ void CharacterBub::Update(float deltaTime, SDL_Event e)
 				SetState(CHARACTERSTATE_NONE);
 		}
 
-		//if (VirtualJoypad::Instance()->UpArrow)
-		if(mOutputs[3] > 0.5)
+		if (VirtualJoypad::Instance()->UpArrow)
 		{
 			if (!mJumping)
 			{
@@ -157,33 +142,9 @@ void CharacterBub::Update(float deltaTime, SDL_Event e)
 
 void CharacterBub::AlternateCharacterUpdate(float deltaTime, SDL_Event e)
 {
-	mInputs.clear();
-	mOutputs.clear();
 
-	//cout << "Bub is using " << GetNumberOfWeights() << "weights." << endl;
-	vector<double> tempWeights = mItsBrain.GetWeights();
 
-	/*if (tempWeights.size() > 0)
-	{
-		for each (double weight in tempWeights)
-		{
-			cout << weight << " | ";
-		}
-		cout << endl;
-	}*/
 	mTimeAlive += deltaTime;
-	//NN inputs
-	mInputs.push_back(GetCentralPosition().x);
-	mInputs.push_back(GetCentralPosition().y);
-	mInputs.push_back((double)GetPoints());
-
-	//NN outputs, each of these is assigned to a different action, greatest value action fires
-	mOutputs = mItsBrain.Update(mInputs);
-
-	if (mOutputs.size() < kNumNNOutputs)
-	{
-		cout << "ERROR, too few NN outputs" << endl;
-	}
 
 	//Collision position variables.
 	int centralXPosition = (int)(mPosition.x + (mSingleSpriteWidth*0.5f)) / TILE_WIDTH;

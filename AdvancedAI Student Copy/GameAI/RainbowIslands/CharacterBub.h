@@ -16,7 +16,7 @@ class CharacterBub : public Character
 
 //--------------------------------------------------------------------------------------------------
 public:
-	CharacterBub(SDL_Renderer* renderer, string imagePath, LevelMap* map, Vector2D startPosition, NeuralNet neuralNetwork);
+	CharacterBub(SDL_Renderer* renderer, string imagePath, LevelMap* map, Vector2D startPosition);
 	~CharacterBub();
 
 	void AlternateCharacterUpdate(float deltaTime, SDL_Event e);  //Required as it is very similar to original, but with RAINBOW tweaks.
@@ -32,6 +32,8 @@ public:
 	bool OnARainbow()						{ return mOnRainbow; }
 	void SetOnARainbow(bool yesNo)			{ mOnRainbow = yesNo; }
 
+
+
 	void AddPoints()						{ mPoints += 10; }
 	int  GetPoints()						{ return mPoints; }
 
@@ -39,11 +41,6 @@ public:
 	float GetTimeAlive() { return mTimeAlive; }
 
 	int	GetRainbowsAllowed();
-
-	void PutWeights(vector<double> &w) { mItsBrain.PutWeights(w); }
-	int GetNumberOfWeights()const { return mItsBrain.GetNumberOfWeights(); }
-
-	NeuralNet GetBrain() { return mItsBrain; }
 
 //--------------------------------------------------------------------------------------------------
 private:
@@ -55,11 +52,9 @@ private:
 	bool	mOnRainbow;
 	int		mPoints;
 
-	NeuralNet mItsBrain;
 	double mFitness;
 
-	vector<double> mInputs;
-	vector<double> mOutputs;
+	
 
 	float mTimeAlive;
 

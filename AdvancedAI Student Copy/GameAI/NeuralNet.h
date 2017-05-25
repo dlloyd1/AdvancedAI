@@ -28,16 +28,26 @@ public:
 	//calculate the outputs from a set of inputs
 	vector<double> Update(vector<double> &inputs);
 
+	
+	vector<double> GetHiddenLayerWeights() const;
+	void PutHiddenLayerWeights(vector<double>& weights);
+
+	vector<Neuron> GetHiddenLayerNeurons() const;
+	vector<double> GetHiddenLayerNeuronActivations() const;
+
 	void GenerateRandomWeights();
+	vector<double> GetOutputLayerWeights() const;
+	void PutOutputLayerWeights(vector<double>& weights);
+
+	bool NetworkTrainingEpoch(double score, vector<double> inputs, vector<double> outputs, double maxScore);
+
 
 private:
-	int mNumInputs;
-	int mNumOutputs;
-	int mNumHiddenLayers;
-	int mNeuronsPerHiddenLayer;
 
 	vector<NeuronLayer> mLayers;
-
+	double mErrorSum;
+	bool mTrained;
+	int mNumEpochs;
 };
 
 

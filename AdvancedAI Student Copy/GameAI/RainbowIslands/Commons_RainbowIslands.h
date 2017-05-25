@@ -75,6 +75,8 @@ struct Neuron
 {
 	int mNumInputs;
 	vector<double> mWeights;
+	double mActivation = 0.5;
+	int error;
 
 	Neuron(int numInputs)
 	{	

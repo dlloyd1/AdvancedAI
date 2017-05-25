@@ -50,6 +50,10 @@ public:
 
 	virtual void	TakeDamage()									{;}//Override with specific functionality.
 	virtual void	MakeAngry()										{;}//Override with specific functionality.
+
+	float			GetSingleSpriteWidth() { return mSingleSpriteWidth; }
+	float			GetSingleSpriteHeight() { return mSingleSpriteHeight; }
+
 //--------------------------------------------------------------------------------------------------
 protected:
 	virtual void	MoveLeft(float deltaTime, int yCentreOnImage);

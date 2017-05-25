@@ -15,6 +15,7 @@ VirtualJoypad::VirtualJoypad()
 	RightArrow = false;
 	UpArrow = false;
 	DownArrow = false;
+	ForceRestart = false;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -61,7 +62,9 @@ void VirtualJoypad::SetJoypadState(SDL_Event e)
 				case SDLK_DOWN:
 					DownArrow = false;
 				break;
-
+				case SDLK_r:
+					ForceRestart = false;
+					break;
 				default:
 				break;
 			}
@@ -85,7 +88,9 @@ void VirtualJoypad::SetJoypadState(SDL_Event e)
 				case SDLK_DOWN:
 					DownArrow = true;
 				break;
-
+				case SDLK_r:
+					ForceRestart = true;
+					break;
 				default:
 				break;
 			}

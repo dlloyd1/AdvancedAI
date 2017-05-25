@@ -1,8 +1,17 @@
-﻿  GameScreen_RainbowIslands.cpp
-c:\student temporary folder\advancedai rainbow v0.1 still broken\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(31): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\student temporary folder\advancedai rainbow v0.1 still broken\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(480): warning C4018: '<': signed/unsigned mismatch
+﻿  GameScreenManager.cpp
   Generating Code...
-  Skipping... (no relevant changes detected)
+  Compiling...
+  Source.cpp
+  LevelMap.cpp
+  GameScreen_RainbowIslands.cpp
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(34): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(149): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(150): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(151): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(152): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(154): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(156): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\rainbowislands\gamescreen_rainbowislands.cpp(233): warning C4018: '<': signed/unsigned mismatch
   CharacterRainbow.cpp
   CharacterFruit.cpp
   CharacterChest.cpp
@@ -10,7 +19,12 @@ c:\student temporary folder\advancedai rainbow v0.1 still broken\advancedai stud
   CharacterBub.cpp
   Character.cpp
   NeuralNet.cpp
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\neuralnet.cpp(238): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\neuralnet.cpp(275): warning C4018: '<': signed/unsigned mismatch
   GenAlg.cpp
-  GameScreenManager.cpp
-  GameAI.vcxproj -> C:\Student Temporary Folder\AdvancedAI Rainbow v0.1 still broken\AdvancedAI Student Copy\Debug\GameAI.exe
-  GameAI.vcxproj -> C:\Student Temporary Folder\AdvancedAI Rainbow v0.1 still broken\AdvancedAI Student Copy\Debug\GameAI.pdb (Full PDB)
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\genalg.cpp(52): warning C4018: '<': signed/unsigned mismatch
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\genalg.cpp(93): warning C4018: '<': signed/unsigned mismatch
+c:\users\dan\desktop\advancedai rainbow v1.4 codetidy training\advancedai student copy\gameai\genalg.cpp(102): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  GameAI.vcxproj -> C:\Users\Dan\Desktop\AdvancedAI Rainbow v1.4 codetidy Training\AdvancedAI Student Copy\Debug\GameAI.exe
+  GameAI.vcxproj -> C:\Users\Dan\Desktop\AdvancedAI Rainbow v1.4 codetidy Training\AdvancedAI Student Copy\Debug\GameAI.pdb (Full PDB)
